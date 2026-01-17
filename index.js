@@ -9,13 +9,7 @@ import http from "node:http";
 
 dotenv.config();
 const app = express();
-app.get("/", (req, res) => {
-  res.send("Realtime Collaboration Backend is running 🚀");
-});
 
-app.get("/healthz", (req, res) => {
-  res.status(200).json({ status: "ok" });
-});
 const port = process.env.PORT || 4000;
 const mongodburi = process.env.MONGO_URI;
 
@@ -29,6 +23,13 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );  
+app.get("/", (req, res) => {
+  res.send("Realtime Collaboration Backend is running 🚀");
+});
+
+app.get("/healthz", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: { origin: "*", methods: ["GET", "POST"] },
@@ -275,3 +276,4 @@ const startServer = async () => {
 };
 
 startServer(); 
+
