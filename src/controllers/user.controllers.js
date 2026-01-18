@@ -32,30 +32,27 @@ const Registeruser=asynchandlers(async(req,res)=>{
 
         }
     }
-      
+ const resend = new Resend(process.env.RESEND_EMAIL_SECRET);
 
-       const transporter=nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port:587,
-        secure:false,
-        auth:{
-            user:"aaravchaprana1627@gmail.com",
-            pass:"hhms kmjq ejdj igux"
-        }
-    }) 
-    if(!transporter){
-      throw new apierrorhandler(400,"cant send the mail")
-    }
-    const transport=await transporter.sendMail({
-        from: '"Collab Platform" <no-reply@collab-platform.com>',
-        to:email,
-        message:"`you verification code for registering on collab-platform is ${verificationCode}`",
-        text:`you verification code for registering on collab-platform is ${verificationCode}`,
+const { data, error } = await resend.emails.send({
+  from: "onboarding@resend.dev",
+  to: email,
+  subject: "Verify your email address",
+  html: `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px;">
+      <h2>Email Verification</h2>
+      <p>Your verification code is:</p>
+      <h1>${verificationCode}</h1>
+      <p>This code is valid for 10 minutes.</p>
+    </div>
+  `,
+});
 
-    })
-    if(!transport){
-      throw new apierrorhandler(400,"cant transport the mail")
-    }
+if (error) {
+  console.error("Resend error:", error);
+}
+console.log("Resend mail data is ",data)
+
     if(!finduser){
     const hashedpassword=await bcrypt.hash(password,10)
     const newUser=await User.create({
@@ -337,4 +334,5 @@ export default {
     authgoogle,
     Sendmail,
     ResetPassword
+
 };
