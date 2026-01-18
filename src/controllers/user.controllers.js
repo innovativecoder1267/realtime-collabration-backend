@@ -281,8 +281,7 @@ if (error) {
 console.log("Resend mail data is ",data)
 
     return res.status(200).json({
-      message:"email sent successfully",
-      data:transport
+      message:"email sent successfully"
     })
     })
     const ResetPassword=asynchandlers(async(req,res)=>{
@@ -328,6 +327,7 @@ export default {
     ResetPassword
 
 };
+
 
 
 
