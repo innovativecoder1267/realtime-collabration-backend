@@ -227,15 +227,7 @@ const verifyroomid=asynchandlers(async(req,res)=>{
     }
     console.log("requestcame")
     const user=await User.findOne({email})
-    const transporter=nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port:587,
-        secure:false,
-        auth:{
-            user:"aaravchaprana1627@gmail.com",
-            pass:"hhms kmjq ejdj igux"
-        }
-    })
+   
     const resetToken = crypto.randomBytes(32).toString("hex");
      const hashedToken = crypto
     .createHash("sha256")
@@ -336,5 +328,6 @@ export default {
     ResetPassword
 
 };
+
 
 
