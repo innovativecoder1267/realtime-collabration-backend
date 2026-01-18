@@ -247,47 +247,47 @@ const verifyroomid=asynchandlers(async(req,res)=>{
     await user.save()
     const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
 
-    const transport=await transporter.sendMail({
-    from: '"Collab Platform" <no-reply@collab-platform.com>',
-    to: email,
-    subject: "Hello ✔",
-      text:`We received a request to reset your password.
-      Use the link below to set a new password. This link will expire in 15 minutes.
-      Reset password link:
-      ${resetLink}
-      If you did not request this, please ignore this email.`,
+    const resend = new Resend(process.env.RESEND_EMAIL_SECRET);
+
+const { data, error } = await resend.emails.send({
+  from: "onboarding@resend.dev",
+  to: email,
+  subject: "Verify your email address",
    html: `
-    <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-      <h2>Reset your password</h2>
-      <p>We received a request to reset your password.</p>
-      <p>Click the button below to set a new password. This link will expire in <strong>15 minutes</strong>.</p>
+        <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+          <h2>Reset your password</h2>
+          <p>We received a request to reset your password.</p>
+          <p>Click the button below to set a new password. This link will expire in <strong>15 minutes</strong>.</p>
+    
+          <a href="${resetLink}" 
+             style="
+               display: inline-block;
+               padding: 12px 20px;
+               margin: 16px 0;
+               background-color: #000;
+               color: #fff;
+               text-decoration: none;
+               border-radius: 6px;
+               font-weight: bold;
+             ">
+            Reset Password
+          </a>
+    
+          <p>If you did not request this, you can safely ignore this email.</p>
+    
+          <p style="font-size: 12px; color: #888;">
+            This is an automated message. Please do not reply.
+          </p>
+        </div>
+      `
+    ,
+});
 
-      <a href="${resetLink}" 
-         style="
-           display: inline-block;
-           padding: 12px 20px;
-           margin: 16px 0;
-           background-color: #000;
-           color: #fff;
-           text-decoration: none;
-           border-radius: 6px;
-           font-weight: bold;
-         ">
-        Reset Password
-      </a>
+if (error) {
+  console.error("Resend error:", error);
+}
+console.log("Resend mail data is ",data)
 
-      <p>If you did not request this, you can safely ignore this email.</p>
-
-      <p style="font-size: 12px; color: #888;">
-        This is an automated message. Please do not reply.
-      </p>
-    </div>
-  `
-
-    }) 
-    if(!transport){
-      throw new apierrorhandler(500,"Cant send the mail")
-    }
     return res.status(200).json({
       message:"email sent successfully",
       data:transport
@@ -336,4 +336,5 @@ export default {
     ResetPassword
 
 };
+
 
