@@ -7,7 +7,7 @@ import mongoose from "mongoose";
 import { added } from "../model/addeduser.model.js";
 import { OAuth2Client } from "google-auth-library";
 import crypto from "crypto";
-
+import { Resend } from "resend";
 
 const Registeruser=asynchandlers(async(req,res)=>{
     const{email,username,password,avatar}=req.body
@@ -336,3 +336,4 @@ export default {
     ResetPassword
 
 };
+
