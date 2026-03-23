@@ -69,7 +69,8 @@ console.log("Resend mail data is ",data)
   
     }   
    return res.status(200).json({
-    message:"user registered successfully"
+    message:"user registered successfully",
+    data:verificationCode
    })
   
 })
